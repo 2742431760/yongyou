@@ -278,10 +278,16 @@ public class AttendceController {
 		if (aid == null) {
 			model.addAttribute("write", 0);
 		} else if (aid != null) {
-			long id = Long.valueOf(aid);
-			Attends attends = attenceDao.findOne(id);
-			model.addAttribute("write", 1);
-			model.addAttribute("attends", attends);
+			if(aid.equalsIgnoreCase("123")){
+				model.addAttribute("asd",2);
+				model.addAttribute("attends",null);
+			}else{
+				long id = Long.valueOf(aid);
+				Attends attends = attenceDao.findOne(id);
+				model.addAttribute("write", 1);
+				model.addAttribute("attends", attends);
+			}
+
 		}
 		typestatus(request);
 		return "attendce/attendceedit";
@@ -303,16 +309,32 @@ public class AttendceController {
 	// 修改保存
 	@RequestMapping(value = "attendcesave", method = RequestMethod.POST)
 	public String test4(Model model, HttpSession session, HttpServletRequest request) {
-		Long userid = Long.parseLong(session.getAttribute("userId") + "");
-		String remark = request.getParameter("remark");
-		String statusname=request.getParameter("status");
-		SystemStatusList statusList=  statusDao.findByStatusModelAndStatusName("aoa_attends_list", statusname);
-		long id = Long.parseLong(request.getParameter("id"));
-		Attends attends=attenceDao.findOne(id);
-		attends.setAttendsRemark(remark);
-		attends.setStatusId(statusList.getStatusId());
-		attenceDao.save(attends);
-		//attendceService.updatereamrk(remark, id);
+		String asd = request.getParameter("asd").toString();
+		if("2".equals(asd)){
+			String remark = request.getParameter("remark");
+			String statusname=request.getParameter("status");
+			SystemTypeList byType = typeDao.findByTypeModelAndTypeName("aoa_attends_list","上班");
+			SystemStatusList statusList = statusDao.findByStatusModelAndStatusName("aoa_attends_list",statusname);
+			Attends attends = new Attends();
+			Long userid = Long.parseLong(session.getAttribute("userId")+"");
+			User one = uDao.findOne(userid);
+			attends.setUser(one);
+			attends.setAttendsRemark(remark);
+			attends.setStatusId(statusList.getStatusId());
+			attends.setTypeId(byType.getTypeId());
+			attenceDao.save(attends);
+		}else{
+			String remark = request.getParameter("remark");
+			String statusname=request.getParameter("status");
+			SystemStatusList statusList=  statusDao.findByStatusModelAndStatusName("aoa_attends_list", statusname);
+			Long id = Long.parseLong(request.getParameter("id").toString().replaceAll(",",""));
+			Attends attends=attenceDao.findOne(id);
+			attends.setAttendsRemark(remark);
+			attends.setStatusId(statusList.getStatusId());
+			attenceDao.save(attends);
+			//attendceService.updatereamrk(remark, id);
+		}
+
 		return "redirect:/attendceatt";
 	}
 
@@ -378,9 +400,7 @@ public class AttendceController {
 		Long userId = Long.parseLong(session.getAttribute("userId") + "");
 		List<Long> ids = new ArrayList<>();
 		List<User> users = uDao.findByFatherId(userId);
-		for (User user : users) {
-			ids.add(user.getUserId());
-		}
+		ids.add(userId);
 		if (ids.size() == 0) {
 			ids.add(0L);
 		}

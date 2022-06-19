@@ -91,7 +91,8 @@
 						<label class="control-label">备注</label>
 						<input name="remark"  class="form-control remark" value="<#if (attends??)&&(attends.attendsRemark??)>${attends.attendsRemark}</#if>"/>
 					</div>
-					<input type="hidden" name="id"  value="<#if attends??>${attends.attendsId}</#if>" > 
+					<input type="hidden" name="id"  value="<#if attends??>${attends.attendsId}</#if>" >
+					<input type="hidden" name="asd" value="<#if asd??>${asd}</#if>">
 				</div>
 				
 				<div class="row">

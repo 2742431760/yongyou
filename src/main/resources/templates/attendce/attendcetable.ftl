@@ -1,5 +1,8 @@
 <div class="bgc-w box box-primary">
 	<div class="box-header" style="padding-bottom: 20px">
+		<a href="attendceedit?aid=123" class="label label-success">
+			<span class="glyphicon glyphicon-plus"></span>新增
+		</a>
 		<a class="label label-success" href=""><span
 			class="glyphicon glyphicon-refresh"></span>  刷新 </a>
 
